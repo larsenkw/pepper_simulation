@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+
+<launch>
+
+    <arg name="control_position" default="false"/>
+
+    <!-- Load controller PID gains, required for PositionJointInterface controllers -->
+    <rosparam command="load" file="$(find pepper_simulation)/config/pepper_gazebo_controller.yaml"/>
+
+    <!-- Load the URDF Model -->
+    <include file="$(find pepper_description)/launch/pepper_publisher.launch"/>
+
+    <!-- Create static transform to link "base_footprint" and "base_link" together so the full tree displays in rviz -->
+    <node name="base_link_broadcaster" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 1 base_footprint base_link 100"/>
+
+    <!-- Load the World -->
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <arg name="world_name" value="$(find pepper_simulation)/worlds/iscas_museum.world"/>
+        <arg name="paused" value="true"/>
+    </include>
+
+    <!-- Start Controller -->
+    <include file="$(find pepper_control)/launch/pepper_control_position.launch" if="$(arg control_position)"/>
+    <include file="$(find pepper_control)/launch/pepper_control_trajectory_all.launch" unless="$(arg control_position)"/>
+
+    <!-- Spawn Pepper in Gazebo -->
+    <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model"
+        args="-param robot_description -urdf -x -1.0 -y -3.0 -z 0.82 -model pepper_MP"/>
+
+</launch>

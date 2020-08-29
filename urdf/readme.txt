@@ -1,0 +1,1 @@
+These two files contain the edited lines as outlined in the documentation for the pepper_vr_ws workspace. These files should have the "_edited" string removed from their names and then placed in the "pepper_robot/pepper_description/urdf/pepper1.0_generated_urdf" folder overwriting the old ones. This will remove a series of errors that show up when running the Gazebo simulation.
